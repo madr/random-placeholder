@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>madrHoldr bookmarklet</title>
+<style>
+  body { width: 900px; margin: 100px auto; }
+  img { display: block; }
+  .line { overflow: hidden; }
+  .unit { float: left; width: 50%; padding-bottom: 10px; }
+  footer {font-size: small; text-align: center; }
+</style>
+</head>
+<body>
+  <div role="main" class="line">
+    <div class="unit">
+      <h1>madrHoldr <sup>0.1</sup> bookmarklet</h1>
+      <p>A bookmarklet which add your flavour of choice to any website by replacing images with placeholder images from any <a href="/">madrHoldr</a> instance.</p>
+      <h2>Available bookmarklets</h2> 
+      <ul>
+      {% for theme in themes %}
+      <li><a href="{% raw %}javascript:/*jslint%20indent:%202,%20browser:%20true%20*/var%20madrHoldr%20=%20function%20()%20{%22use%20strict%22;var%20images,%20max,%20i,%20src,%20img,theme%20=%20%22{% endraw %}{{ theme }}{% raw %}%22,url%20=%20%22http://{% endraw %}{{ url }}{% raw %}%22;images%20=%20document.getElementsByTagName(%22img%22);for%20(i%20=%200,max%20=%20images.length;i%3Cmax;i++)%20{if%20(images[i].width)%20{img%20=%20images[i];src%20=%20img.width%20+%20%22/%22%20+%20img.height;src%20=%20url%20+%20%22/%22%20+%20src;src%20=%20src%20+%20%22/%22%20+%20theme;img.src%20=%20src;}}};madrHoldr();{% endraw %}">{{ theme }}ize!</a></li>
+      {% endfor %}
+      </ul>
+      <p><small>Based upon the themes available. Please see README to manage themes.</small></p>
+    </div>
+    <div class="unit">
+      <h2>Instructions</h2>
+      <ol>
+        <li>Pick a bookmarklet. <br><small>(The list to the left.)</small></li>
+        <li>Drag it to your bookmarks bar. <br><small>(You may need to go to your browser's view menu and make sure the Bookmarks toolbar is displayed.)</small></li>
+        <li>Navigate to any website. <br><small>(The more images, the better.)</small></li>
+        <li>Click the bookmark.</li>
+      </ol>
+    </div>
+  </div>
+  <hr>
+  <footer role="contentinfo">
+    Also available as a <a href="/bookmarklet">Bookmarklet Service</a>.<br>
+    Source on <a href="https://github.com/madr/holdr">GitHub</a>.
+  </footer>
+  <script>
+/*jslint indent: 2, browser: true */
+var generateBookmarklet = function (formElem) {
+  "use strict";
+  var href, results, link;
+  href = {% raw %}"/*jslint%20indent:%202,%20browser:%20true%20*/" +
+    "var%20madrHoldr%20=%20function%20()%20{%22use%20strict%22;" +
+    "var%20images,%20i,%20src,%20img,theme%20=%20%22{{theme}}%22," +
+    "url%20=%20%22http://{{url}}%22;images%20=%20document.getElements" +
+    "ByTagName(%22img%22);i%20=%20images.length;while%20(i)%20{i%20-=%" +
+    "201;if%20(images[i].width)%20{img%20=%20images[i];src%20=%20img." +
+    "width%20+%20%22/%22%20+%20img.height;src%20=%20url%20+%20%22/" +
+    "%22%20+%20src;src%20=%20src%20+%20%22/%22%20+%20theme;img" +
+    ".src%20=%20src;}}};madrHoldr();";{% endraw %}
+  href = href.replace("{{url}}", formElem.elements[1].value);
+  href = href.replace("{{theme}}", formElem.elements[2].value);
+  link = document.createElement("a");
+  link.href = 'javascript:' + href;
+  link.innerHTML = formElem.elements[2].value + "ize!";
+  results = document.createElement("output");
+  results.innerHTML = "Now drag this link to your bookmarks: ";
+  results.appendChild(link);
+  formElem.parentNode.insertBefore(results, formElem);
+  return false;
+};
+</script>
+</body>
+</html>
